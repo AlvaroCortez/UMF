@@ -12,7 +12,7 @@ public class Test {
 
     public static int findN(double eps) {
         int N = 1;
-        double origin = s(1.0, 0.005) * 1.20205690315031;
+        double origin = s(1.0, 0.005) * 1.20205690315031; // 1.20205690315031 этому равна сумма ряда от 1 до бесконечности.
         double result = s(1.0, 0.005) * row(N + 1);
         if (Math.abs(origin - result) >= eps) {
             return N;
