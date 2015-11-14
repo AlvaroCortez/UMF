@@ -42,9 +42,30 @@ public class Solution {
         return summa;
     }
 
-    public double getSumWithAccuracy(double x, double t){
-        long N = 200;
+    public double getSumWithAccuracy(double x, double t, double eps){
+        long N = getNumberOfIteration(eps);
         return getSumWithLimit(x, t, N);
+    }
+
+    public double row(double n) {
+        return 1/Math.pow(n, 3);
+    }
+
+    public long getNumberOfIteration(double eps){
+        long N = 0;
+        R = Math.sqrt(S/Math.PI);
+        double original = 1.20205690315031*4*R*L*L/Math.PI;
+        double result = 0;
+        do{
+            N++;
+            result+=row(N)*4*R*L*L/Math.PI;
+        } while (Math.abs(original - result)>eps);
+        return N;
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        System.out.println(solution.getNumberOfIteration(0.0001));
     }
 
     public double getL() {

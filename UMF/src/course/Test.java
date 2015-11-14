@@ -1,3 +1,5 @@
+package course;
+
 public class Test {
 
 	public static double row(double n) {
@@ -14,14 +16,14 @@ public class Test {
         int N = 1;
         double origin = s(1.0, 0.005) * 1.20205690315031; // 1.20205690315031 этому равна сумма ряда от 1 до бесконечности.
         double result = s(1.0, 0.005) * row(N + 1);
-        if (Math.abs(origin - result) >= eps) {
+        if (Math.abs(origin - result) > eps) {
             return N;
         } else {
             N++;
             N++;
             while (true) {
                 result += s(1.0, 0.005) * Math.abs(s(1, 0.005) * row(N));
-                if (Math.abs(origin - result) >= eps) {
+                if (Math.abs(origin - result) > eps) {
                     return N;
                 }
                 N++;
@@ -30,6 +32,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        System.out.println(findN(0.1));
+        System.out.println(findN(0.000001));
     }
 }
