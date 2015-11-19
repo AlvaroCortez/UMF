@@ -13,7 +13,8 @@ public class Solution {
     private double smallT = 10;
     private final double S = 0.005;
     private double R = 0;
-    private final long N = 1000;
+    private long N = 100;
+    private double eps = 0.001;
 
     private double PSI(int n){
         return (n==2) ? 1d : 0d;
@@ -43,7 +44,7 @@ public class Solution {
     }
 
     public double getSumWithAccuracy(double x, double t, double eps){
-        long N = getNumberOfIteration(eps);
+        N = getNumberOfIteration(eps);
         return getSumWithLimit(x, t, N);
     }
 
@@ -108,11 +109,23 @@ public class Solution {
         return N;
     }
 
+    public void setN(long n) {
+        N = n;
+    }
+
     public double getSmallT() {
         return smallT;
     }
 
     public void setSmallT(double smallT) {
         this.smallT = smallT;
+    }
+
+    public double getEps() {
+        return eps;
+    }
+
+    public void setEps(double eps) {
+        this.eps = eps;
     }
 }

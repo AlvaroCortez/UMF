@@ -20,14 +20,24 @@ public class ViewGraphic {
         this.solution = solution;
     }
 
-    public JFreeChart getChart(){
+    public JFreeChart getChart(int type){
         XYSeriesCollection xy = new XYSeriesCollection();
         XYSeries series = new XYSeries(NAME);
         int I = POINTS_ON_PLOT;
-        double spatialStep =  solution.getL() / I;
-        for (int i = 0; i <= I; i++) {
-            double x = i * spatialStep;
-            series.add(x, solution.getSumWithLimit(x, solution.getSmallT(), solution.getN()));
+        double spatialStep = solution.getL() / I;
+        switch (type) {
+            case 0:
+                for (int i = 0; i <= I; i++) {
+                    double x = i * spatialStep;
+                    series.add(x, solution.getSumWithLimit(x, solution.getSmallT(), solution.getN()));
+                }
+                break;
+            case 1:
+                for (int i = 0; i <= I; i++) {
+                    double x = i * spatialStep;
+                    series.add(x, solution.getSumWithAccuracy(x, solution.getSmallT(), solution.getEps()));
+                }
+                break;
         }
         xy.addSeries(series);
         JFreeChart pl = ChartFactory.createXYLineChart("", "x", "u(x), при t = " + solution.getSmallT(),
