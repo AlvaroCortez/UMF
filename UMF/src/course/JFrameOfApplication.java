@@ -30,6 +30,10 @@ public class JFrameOfApplication extends JFrame{
     private JTextField epsField;
     private JButton epsButton;
     private JLabel countIterationLable;
+    private JLabel summandLabel;
+    private JTextField summandField;
+    private JLabel firstGraph;
+    private JLabel secondGraph;
 
     public void init(){
         executeButton = new JButton("Выполнить");
@@ -39,11 +43,15 @@ public class JFrameOfApplication extends JFrame{
         paramsLabel = new JLabel("Введите параметр t");
         accuracyLabel1 = new JLabel("<html>Вычисление кол-ва итераций</br> с помощью заданной точности<html>");
         epsLabel = new JLabel("Введите точность");
+        summandLabel = new JLabel("Количество слагаемых");
+        summandField = new JTextField();
         fieldT = new JTextField();
         fieldT.setPreferredSize(new Dimension(100,2));
         epsField = new JTextField();
         epsField.setPreferredSize(new Dimension(100, 2));
         viewGraphic = new ViewGraphic(solution);
+        firstGraph = new JLabel("График №1 - x(t)");
+        secondGraph = new JLabel("График №2 - t(x)");
         executeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -61,8 +69,11 @@ public class JFrameOfApplication extends JFrame{
         MigLayout mwLayout = new MigLayout("", "[][]", "[top][]");
         getContentPane().setLayout(mwLayout);
         getContentPane().add(chartPanel, "grow 50,push,span");
+        paramsPanel.add(firstGraph,"wrap");
         paramsPanel.add(paramsLabel, "split 2");
         paramsPanel.add(fieldT, "cell 1 0 5 1, wrap");
+        paramsPanel.add(summandLabel, "split 2");
+        paramsPanel.add(summandField, "cell 1 0 5 1, wrap");
         paramsPanel.add(executeButton, "wrap");
         paramsPanel.add(accuracyLabel1,"span 5, wrap");
         paramsPanel.add(epsLabel,"split");
@@ -87,7 +98,12 @@ public class JFrameOfApplication extends JFrame{
         }
         switch (type) {
             case NORMAL:
-                solution.setN(100);
+                try {
+                    long N = Long.parseLong(summandField.getText());
+                    solution.setN(N);
+                } catch (NumberFormatException e){
+                    solution.setN(100);
+                }
                 chartPanel.setChart(viewGraphic.getChart(NORMAL));
                 break;
             case ACCURACY:

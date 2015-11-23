@@ -40,7 +40,7 @@ public class ViewGraphic {
                 break;
         }
         xy.addSeries(series);
-        JFreeChart pl = ChartFactory.createXYLineChart("", "x", "u(x), при t = " + solution.getSmallT(),
+        JFreeChart pl = ChartFactory.createXYLineChart("", "x, кол-во слагаемых N = " + solution.getN(), "u(x), при t = " + solution.getSmallT(),
                 xy, PlotOrientation.VERTICAL, true, true, false);
         double dy = (series.getMaxY() - series.getMinY()) * 0.03;
         ((XYPlot) pl.getPlot()).getRangeAxis()
