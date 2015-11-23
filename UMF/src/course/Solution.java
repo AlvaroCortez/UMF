@@ -15,6 +15,7 @@ public class Solution {
     private double R = 0;
     private long N = 100;
     private double eps = 0.001;
+    private double x = 0;
 
     private double PSI(int n){
         return (n==2) ? 1d : 0d;
@@ -127,5 +128,13 @@ public class Solution {
 
     public void setEps(double eps) {
         this.eps = eps;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
     }
 }
