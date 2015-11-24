@@ -22,15 +22,15 @@ public class Solution {
     }
 
     private double PHI(int n){
-        return (Math.sin(2*Math.PI*n/3) - Math.sin(Math.PI*n/3))*2/(Math.PI*n);
+        return (Math.sin(2*Math.PI*n/3) - Math.sin(Math.PI*n/3))*4/(2*Math.PI*n + Math.sin(2*Math.PI*n));
     }
 
     private double sub(int n){
-        return (2*ALPHA*L*L + K*R*Math.pow(Math.PI*n,2))/(C*R*L*L);
+        return (2*ALPHA*L*L+K*R*Math.pow(Math.PI*n,2))/(C*R*L*L);
     }
 
     private double getFirstSummand(double t){
-        return R*(1 - Math.exp(-2*ALPHA*t/C*R))/3*ALPHA;
+        return R*(1 - Math.exp(-2*ALPHA*t/(C*R)))/(6*ALPHA);
     }
 
     public double getSumWithLimit(double x, double t, long N){
@@ -40,7 +40,7 @@ public class Solution {
             double e = Math.exp(-1d*sub(n)*t);
             summa = summa + (PHI(n)*(1d - e)/(C*sub(n)))*Math.cos(Math.PI*n*x/L);
         }
-        summa= summa + Math.exp(-1d*sub(2)*t)*Math.cos(2d * Math.PI*x/L);
+        summa= summa + Math.exp(-1d*sub(2)*t)*Math.cos(2d * Math.PI*x/L)*8*Math.PI/(L*Math.sin(4*Math.PI)+4*L*Math.PI);
         return summa;
     }
 
