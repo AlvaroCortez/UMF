@@ -51,23 +51,53 @@ public class Solution {
 
     public double row(double n) {
         return 1/Math.pow(n, 3);
+//        return 1/(0.01*n + 0.002*n*n*n);
+    }
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        solution.oor();
+    }
+
+    public void oor() {
+        double eps = 0.00000001;
+        double x = 0.7;
+        double t = 300;
+
+        for (int i = 0; i < 6; i++) {
+            long n = this.getNumberOfIteration(eps);
+            long n_t = n;
+            double uOtN = this.getSumWithLimit(x, t, n--);
+            double uOtN_1 = this.getSumWithLimit(x, t, n);
+            while (uOtN - uOtN_1 < eps) {
+                uOtN = uOtN_1;
+                uOtN_1 = this.getSumWithLimit(x, t, n--);
+                if(n == -1) {
+                    n = 0;
+                    break;
+                }
+            }
+            System.out.println("eps = " + eps);
+            System.out.println("N[т] = " + n_t);
+            System.out.println("N[п] = " + n);
+            eps *= 10;
+        }
     }
 
     public long getNumberOfIteration(double eps){
         long N = 0;
         R = Math.sqrt(S/Math.PI);
-        double original = 1.20205690315031*4*R*L*L/Math.PI;
+        double original = 1.20205690315031*4*R*L*L/Math.PI*K*R*R*Math.PI/(ALPHA*ALPHA);
         double result = 0;
+        double p = original - result;
         do{
             N++;
-            result+=row(N)*4*R*L*L/Math.PI;
-        } while (Math.abs(original - result)>eps);
+            result+=row(N)*4*R*L*L/Math.PI*K*R*R*Math.PI/(ALPHA*ALPHA);
+//            result += row(N)*4*L*L/(K*Math.PI*Math.PI*Math.PI);
+//            result += row(N)*4/Math.PI;
+            p = original - result;
+        } while (Math.abs(p)>=eps);
         return N;
-    }
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        System.out.println(solution.getNumberOfIteration(0.0001));
     }
 
     public double getL() {
