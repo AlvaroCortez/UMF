@@ -127,6 +127,10 @@ public class JFrameOfApplication extends JFrame{
         paramsPanel.add(epsXButton,"wrap");
         paramsPanel.add(countIterationLabelX, "wrap");
         getContentPane().add(paramsPanel, "dock west");
+        System.out.println("При eps = 0.00001, x = 0.7, t = 300");
+        solution.oor(0.00001, 0.7, 300);
+        System.out.println("При eps = 0.00001, x = 0.33, t = 300");
+        solution.oor(0.00001, 0.33, 300);
     }
 
     private void executeButtonClicked(int type){
