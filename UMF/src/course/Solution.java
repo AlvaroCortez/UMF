@@ -76,7 +76,7 @@ public class Solution {
             double uOtN = this.getSumWithLimit(x, t, n--);
             double uOtN_1 = this.getSumWithLimit(x, t, n);
             while (uOtN - uOtN_1 < eps) {
-                uOtN = uOtN_1;
+//                uOtN = uOtN_1;
                 uOtN_1 = this.getSumWithLimit(x, t, --n);
                 if(n == -1) {
                     n = 0;
@@ -95,7 +95,7 @@ public class Solution {
 //        long N = 45;
         R = Math.sqrt(S/Math.PI);
 //        double original = 1.20205690315031*4*R*L*L/Math.PI;
-        double original = 1.20205690315031*8*R*L*L/Math.PI;
+        double original = 1.20205690315031*4*R*L*L/Math.PI;
 //        double original = 1.20205690315031*4*R*L*L/Math.PI*K*R*R*Math.PI/(ALPHA*ALPHA);
 //        double original = 1.20205690315031*4*L*L/(Math.PI*Math.PI*Math.PI*R + (2*ALPHA*L*L) + 2);
 //        double original = 21.7509*R*8*L*L;
@@ -106,7 +106,7 @@ public class Solution {
         do{
             N++;
 //            result+=row(N)*4*R*L*L/Math.PI*K*R*R*Math.PI/(ALPHA*ALPHA);
-            result+=row(N)*8*R*L*L/Math.PI;
+            result+=row(N)*4*R*L*L/Math.PI;
 //            result+=row(N)*4*R*L*L/Math.PI;
 //            result+=row(N)*8*L*L/(Math.PI*Math.PI);
 //            result+=row(N);
