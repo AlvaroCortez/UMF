@@ -51,18 +51,18 @@ public class Solution {
     }
 
     public double row(double n) {
-//        return 1/Math.pow(n, 3);
+        return 1/Math.pow(n, 3);
 //        return 1/(0.01*n + 0.002*n*n*n);
-        return 1/(2*Math.PI*n*n*n + n*n + n);
+//        return 1/(2*Math.PI*n*n*n + n*n + n);
     }
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-        solution.oor(0.00001, 0.7, 300);
+        solution.oor(0.0001, 0.33, 1);
 
-        for (int i = 0; i < 15; i++) {
+        /*for (int i = 0; i < 15; i++) {
             System.out.println(solution.getSumWithLimit(0.7, 300, i));
-        }
+        }*/
     }
 
     public void oor(double eps, double x, double t) {
@@ -94,17 +94,21 @@ public class Solution {
         long N = 0;
 //        long N = 45;
         R = Math.sqrt(S/Math.PI);
+//        double original = 1.20205690315031*4*R*L*L/Math.PI;
+        double original = 1.20205690315031*8*R*L*L/Math.PI;
 //        double original = 1.20205690315031*4*R*L*L/Math.PI*K*R*R*Math.PI/(ALPHA*ALPHA);
 //        double original = 1.20205690315031*4*L*L/(Math.PI*Math.PI*Math.PI*R + (2*ALPHA*L*L) + 2);
 //        double original = 21.7509*R*8*L*L;
-        double original = 0.150153990445*8*L*L/(Math.PI*Math.PI);
+//        double original = 0.150153990445*8*L*L/(Math.PI*Math.PI);
 //        double original = 96.9401*R*8*L*L;
         double result = 0;
         double p = original - result;
         do{
             N++;
 //            result+=row(N)*4*R*L*L/Math.PI*K*R*R*Math.PI/(ALPHA*ALPHA);
-            result+=row(N)*8*L*L/(Math.PI*Math.PI);
+            result+=row(N)*8*R*L*L/Math.PI;
+//            result+=row(N)*4*R*L*L/Math.PI;
+//            result+=row(N)*8*L*L/(Math.PI*Math.PI);
 //            result+=row(N);
 //            result += row(N)*4*L*L/(K*Math.PI*Math.PI*Math.PI);
 //            result += row(N)*4/Math.PI;
