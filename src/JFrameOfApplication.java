@@ -1,5 +1,3 @@
-package course;
-
 import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartPanel;
 
