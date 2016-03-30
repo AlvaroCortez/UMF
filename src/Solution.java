@@ -1,5 +1,3 @@
-package course;
-
 /**
  * Created by Den on 05.11.15.
  */
