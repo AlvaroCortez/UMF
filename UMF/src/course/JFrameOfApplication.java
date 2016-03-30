@@ -1,5 +1,8 @@
 package course;
 
+import course.dialogs.AboutUsDialog;
+import course.dialogs.InstructionDialog;
+import course.dialogs.TaskDialog;
 import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartPanel;
 
@@ -43,8 +46,53 @@ public class JFrameOfApplication extends JFrame{
     private JLabel secondGraph;
     private JLabel paramXLabel;
     private JTextField fieldX;
+    private JMenuBar menuBar;
+    private JMenuItem taskItem;
+    private JMenuItem instructionsItem;
+    private JMenuItem aboutUsItem;
+    private JMenuItem exitItem;
+    private TaskDialog taskDialog;
+    private InstructionDialog instructionDialog;
+    private AboutUsDialog aboutUsDialog;
 
     public void init(){
+        taskDialog = new TaskDialog(this);
+        instructionDialog = new InstructionDialog(this);
+        aboutUsDialog = new AboutUsDialog(this);
+        menuBar = new JMenuBar();
+        taskItem = new JMenuItem("О задании");
+        taskItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                taskDialog.showDialog();
+            }
+        });
+        instructionsItem = new JMenuItem("Инструкция");
+        instructionsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                instructionDialog.showDialog();
+            }
+        });
+        aboutUsItem = new JMenuItem("Об авторах", new ImageIcon("/aboutUs.png"));
+        aboutUsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                aboutUsDialog.showDialog();
+            }
+        });
+        exitItem = new JMenuItem("Выход");
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        menuBar.add(taskItem);
+        menuBar.add(instructionsItem);
+        menuBar.add(aboutUsItem);
+        menuBar.add(exitItem);
+        setJMenuBar(menuBar);
         executeButton = new JButton("Выполнить");
         executeXButton = new JButton("Выполнить");
         chartPanel = new ChartPanel(null);
@@ -127,10 +175,13 @@ public class JFrameOfApplication extends JFrame{
         paramsPanel.add(epsXButton,"wrap");
         paramsPanel.add(countIterationLabelX, "wrap");
         getContentPane().add(paramsPanel, "dock west");
-        System.out.println("При eps = 0.00001, x = 0.7, t = 300");
-        solution.oor(0.00001, 0.7, 300);
-        System.out.println("При eps = 0.00001, x = 0.33, t = 300");
-        solution.oor(0.00001, 0.33, 300);
+        System.out.println("При eps = 0.00001, x = 0.66, t = 1");
+        solution.oor(0.00001, 0.66, 1);
+        System.out.println("При eps = 0.00001, x = 0.33, t = 1");
+        solution.oor(0.00001, 0.33, 1);
+        System.out.println("При eps = 0.00001, x = 0.1, t = 5");
+        solution.oor(0.00001, 0.1, 5);
+        setName("Курсовая работа");
     }
 
     private void executeButtonClicked(int type){
@@ -198,6 +249,7 @@ public class JFrameOfApplication extends JFrame{
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.init();
         frame.setSize(new Dimension(WIDTH, HEIGHT));
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
