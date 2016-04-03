@@ -83,30 +83,30 @@ public class ExplicitScheme {
     }
 
 
-    public double uikplus1(double uiplus1k, double uik, double uiminus1k, double hx, double ht, double phi) {
+    private double uikplus1(double uiplus1k, double uik, double uiminus1k, double hx, double ht, double phi) {
         double result = (-2 * ALPHA * ht / (C * R)) * uik + (K * ht / C) * ((uiplus1k - 2 * uik + uiminus1k) / (hx*hx))
                 + (ht * phi / C) + uik;
         return result;
     }
 
-    public static void main(String[] args) {
+    public void explicitScheme(double ht, double hx, double t) {
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
         XYSeries xySeries = new XYSeries("Явная схема");
-        ExplicitScheme explicitScheme = new ExplicitScheme();
-        double ht = 0.0005;
-        double hx = 0.01;
-        double[][] scheme = explicitScheme.scheme(hx, ht);
+        //ExplicitScheme explicitScheme = new ExplicitScheme();
+        //double ht = 0.0005;
+        //double hx = 0.01;
+        double[][] scheme = scheme(hx, ht);
         double x = 0;
         // int level = 1630;
         // double temperature = level * ht;
-        double t = 5;
+        //double t = 5;
         int level = (int) (t / ht);
         for (int i = 0; i < scheme[0].length; i++) {
             xySeries.add(x, scheme[level][i]);
             x += hx;
         }
         xySeriesCollection.addSeries(xySeries);
-        JFreeChart pl = ChartFactory.createXYLineChart("", "x, кол-во слагаемых N = ", "u(x), при t = " + t,
+        JFreeChart pl = ChartFactory.createXYLineChart("", "x, при t = " + t + ", ht = " + ht + ", hx = " + hx, "u(x)",
                 xySeriesCollection, PlotOrientation.VERTICAL, true, true, false);
         JFrame jFrame = new JFrame();
         ChartPanel chartPanel = new ChartPanel(pl);
