@@ -20,6 +20,8 @@ public class JFrameOfApplication extends JFrame{
     private static final int HEIGHT = 700;
     private static final int ACCURACY = 1;
     private static final int NORMAL = 0;
+    private static final int EXPLICIT = 100;
+    private static final int IMPLICIT = 200;
     private JButton executeButton;
     private JButton executeXButton;
     private ChartPanel chartPanel;
@@ -55,14 +57,16 @@ public class JFrameOfApplication extends JFrame{
     private InstructionDialog instructionDialog;
     private AboutUsDialog aboutUsDialog;
     private JButton explicitSchemeButton;
+    private JButton implicitSchemeButton;
     private JLabel schemeLabel;
-    private JLabel explicitSchemeLabelParamT;
-    private JLabel explicitSchemeLabelParamHX;
-    private JLabel explicitSchemeLabelParamHT;
-    private JTextField explicitSchemeFieldParamT;
-    private JTextField explicitSchemeFieldParamHX;
-    private JTextField explicitSchemeFieldParamHT;
+    private JLabel schemeLabelParamT;
+    private JLabel schemeLabelParamHX;
+    private JLabel schemeLabelParamHT;
+    private JTextField schemeFieldParamT;
+    private JTextField schemeFieldParamHX;
+    private JTextField schemeFieldParamHT;
     private ExplicitScheme explicitScheme;
+    private ImplicitScheme implicitScheme;
 
     public void init(){
         taskDialog = new TaskDialog(this);
@@ -164,16 +168,25 @@ public class JFrameOfApplication extends JFrame{
         explicitSchemeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                explicitSchemeButtonClicked();
+                schemeButtonClicked(EXPLICIT);
             }
         });
         schemeLabel = new JLabel("Построение схем");
-        explicitSchemeLabelParamT = new JLabel("Введите параметр t");
-        explicitSchemeLabelParamHT = new JLabel("Введите параметр hx");
-        explicitSchemeLabelParamHX = new JLabel("Введите параметр ht");
-        explicitSchemeFieldParamHT = new JTextField();
-        explicitSchemeFieldParamT = new JTextField();
-        explicitSchemeFieldParamHX = new JTextField();
+        schemeLabelParamT = new JLabel("Введите параметр t");
+        schemeLabelParamHT = new JLabel("Введите параметр hx");
+        schemeLabelParamHX = new JLabel("Введите параметр ht");
+        schemeFieldParamHT = new JTextField();
+        schemeFieldParamT = new JTextField();
+        schemeFieldParamHX = new JTextField();
+
+        implicitScheme = new ImplicitScheme();
+        implicitSchemeButton = new JButton("Неявная схема");
+        implicitSchemeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                schemeButtonClicked(IMPLICIT);
+            }
+        });
 
         MigLayout mwLayout = new MigLayout("", "[][]", "[top][]");
         getContentPane().setLayout(mwLayout);
@@ -201,13 +214,14 @@ public class JFrameOfApplication extends JFrame{
         paramsPanel.add(epsXButton,"wrap");
         paramsPanel.add(countIterationLabelX, "wrap");
         paramsPanel.add(schemeLabel, "wrap");
-        paramsPanel.add(explicitSchemeLabelParamT, "split 2");
-        paramsPanel.add(explicitSchemeFieldParamT, "cell 1 0 5 1, wrap");
-        paramsPanel.add(explicitSchemeLabelParamHX, "split 2");
-        paramsPanel.add(explicitSchemeFieldParamHX, "cell 1 0 5 1, wrap");
-        paramsPanel.add(explicitSchemeLabelParamHT, "split 2");
-        paramsPanel.add(explicitSchemeFieldParamHT, "cell 1 0 5 1, wrap");
+        paramsPanel.add(schemeLabelParamT, "split 2");
+        paramsPanel.add(schemeFieldParamT, "cell 1 0 5 1, wrap");
+        paramsPanel.add(schemeLabelParamHX, "split 2");
+        paramsPanel.add(schemeFieldParamHX, "cell 1 0 5 1, wrap");
+        paramsPanel.add(schemeLabelParamHT, "split 2");
+        paramsPanel.add(schemeFieldParamHT, "cell 1 0 5 1, wrap");
         paramsPanel.add(explicitSchemeButton, "wrap");
+        paramsPanel.add(implicitSchemeButton, "wrap");
         getContentPane().add(paramsPanel, "dock west");
         System.out.println("При eps = 0.00001, x = 0.66, t = 1");
         solution.oor(0.00001, 0.66, 1);
@@ -218,24 +232,30 @@ public class JFrameOfApplication extends JFrame{
         setName("Курсовая работа");
     }
 
-    private void explicitSchemeButtonClicked(){
+    private void schemeButtonClicked(int type){
         double t, ht, hx;
         try {
-            t = Double.parseDouble(explicitSchemeFieldParamT.getText());
+            t = Double.parseDouble(schemeFieldParamT.getText());
         } catch (NumberFormatException e) {
             t = 5;
         }
         try {
-            hx = Double.parseDouble(explicitSchemeFieldParamHX.getText());
+            hx = Double.parseDouble(schemeFieldParamHX.getText());
         } catch (NumberFormatException e) {
             hx = 0.01;
         }
         try {
-            ht = Double.parseDouble(explicitSchemeFieldParamHT.getText());
+            ht = Double.parseDouble(schemeFieldParamHT.getText());
         } catch (NumberFormatException e) {
             ht = 0.0005;
         }
-        explicitScheme.explicitScheme(ht, hx, t);
+        switch (type){
+            case EXPLICIT:
+                explicitScheme.explicitScheme(ht, hx, t);
+                break;
+            case IMPLICIT:
+                implicitScheme.explicitScheme(ht, hx, t);
+        }
     }
 
     private void executeButtonClicked(int type){
