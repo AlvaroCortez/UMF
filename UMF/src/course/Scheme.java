@@ -31,7 +31,7 @@ public abstract class Scheme {
 
     public void explicitScheme(double ht, double hx, double t) {
         XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-        XYSeries xySeries = new XYSeries("Явная схема");
+        XYSeries xySeries = new XYSeries("Схема");
         //ExplicitScheme explicitScheme = new ExplicitScheme();
         //double ht = 0.0005;
         //double hx = 0.01;

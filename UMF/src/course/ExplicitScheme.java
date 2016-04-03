@@ -32,49 +32,9 @@ public class ExplicitScheme extends Scheme{
             for (int i = 1; i < I; i++) {
                 gridValues[k + 1][i] = gridValues[k][i] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*((gridValues[k][i + 1] + gridValues[k][i - 1])*this.K/(hx*hx) + PHI(hx * i));
             }
-            gridValues[k + 1][I] = gridValues[k][I] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k][I-1]*this.K/(hx*hx) + PHI(hx * I));
+            gridValues[k + 1][I] = gridValues[k][I] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k][I-1]*this.K/(hx*hx) + PHI(hx * 0));
         }
 
         return gridValues;
     }
-
-//    private double PHI(double xi) {
-//        if (xi >= L / 3 && xi <= 2 * L / 3) {
-//            return 1;
-//        } else {
-//            return 0;
-//        }
-//    }
-//
-//    private double PSI(double x){
-//        return Math.cos(2 * Math.PI * x / L);
-//    }
-
-//    public void explicitScheme(double ht, double hx, double t) {
-//        XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-//        XYSeries xySeries = new XYSeries("Явная схема");
-//        //ExplicitScheme explicitScheme = new ExplicitScheme();
-//        //double ht = 0.0005;
-//        //double hx = 0.01;
-//        double[][] scheme = scheme(hx, ht);
-//        double x = 0;
-//        // int level = 1630;
-//        // double temperature = level * ht;
-//        //double t = 5;
-//        int level = (int) (t / ht);
-//        for (int i = 0; i < scheme[0].length; i++) {
-//            xySeries.add(x, scheme[level][i]);
-//            x += hx;
-//        }
-//        xySeriesCollection.addSeries(xySeries);
-//        JFreeChart pl = ChartFactory.createXYLineChart("", "x, при t = " + t + ", ht = " + ht + ", hx = " + hx, "u(x)",
-//                xySeriesCollection, PlotOrientation.VERTICAL, true, true, false);
-//        JFrame jFrame = new JFrame();
-//        ChartPanel chartPanel = new ChartPanel(pl);
-//        jFrame.add(chartPanel);
-//        chartPanel.setVisible(true);
-//        jFrame.setVisible(true);
-//        jFrame.setSize(800, 600);
-//        jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//    }
 }
