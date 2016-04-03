@@ -27,42 +27,21 @@ public class ExplicitScheme {
     private double[][] gridValues;
 
     public double[][] scheme(double hx, double ht) {
-        gridValues = new double[(int) (T / ht + 1)][(int) ((L / hx) + 1)];
-        int I = gridValues[0].length;
-        int K = gridValues.length;
+        gridValues = new double[(int) (T / ht ) + 1][(int) ((L / hx) ) + 1];
+        int I = gridValues[0].length - 1;
+        int K = gridValues.length - 1;
 
-        for (int i = 0; i < I  /*i < I*/; i++) {
+        for (int i = 0; i <= I  /*i < I*/; i++) {
             gridValues[0][i] = PSI(hx * i) - U0;
         }
-        //gridValues[0][(int) (I-1)] = 0;
 
-        // Сделал проверку, чтобы убедиться, что на границе возможно должен быть ноль.
-         System.out.println(gridValues[0][gridValues[0].length - 1]);
-//        for (int k = 1; k < K; k++) {
-////            gridValues[k][0] = (-2 * ALPHA * ht / (C * R)) * gridValues[k - 1][0] + (this.K * ht / C) * ( 2 * (gridValues[k - 1][1] - gridValues[k - 1][0])) / (hx*hx)
-////                    + (ht * PHI(hx * 0) / C) + gridValues[k -1][0];
-//            gridValues[k][0] = gridValues[k - 1][0] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k-1][0]*this.K/(hx*hx) + PHI(hx * 0));
-//        }
-        for (int k = 1; k < K; k++) {
-            gridValues[k][0] = gridValues[k - 1][0] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k-1][0]*this.K/(hx*hx) + PHI(hx * 0));
-            for (int i = 1; i < I - 1; i++) {
-                //gridValues[k][i] = uikplus1(gridValues[k - 1][i + 1], gridValues[k - 1][i], gridValues[k - 1][i - 1], hx, ht, PHI(hx * i));
-                gridValues[k][i] = gridValues[k - 1][i] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*((gridValues[k-1][i + 1] + gridValues[k - 1][i - 1])*this.K/(hx*hx) + PHI(hx * i));
+        for (int k = 0; k < K; k++) {
+            gridValues[k + 1][0] = gridValues[k][0] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k][0]*this.K/(hx*hx) + PHI(hx * 0));
+            for (int i = 1; i < I; i++) {
+                gridValues[k + 1][i] = gridValues[k][i] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*((gridValues[k][i + 1] + gridValues[k][i - 1])*this.K/(hx*hx) + PHI(hx * i));
             }
-            gridValues[k][I - 1] = gridValues[k - 1][I - 1] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k-1][I-2]*this.K/(hx*hx) + PHI(hx * 0));
+            gridValues[k + 1][I] = gridValues[k][I] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k][I-1]*this.K/(hx*hx) + PHI(hx * I));
         }
-//        for (int k = 1; k < K; k++) {
-//            gridValues[k][I - 1] = (-2 * ALPHA * ht / (C * R)) * gridValues[k - 1][I - 2] - (K * ht / C) * ( - 2 *  + gridValues[k - 1][I - 2]) / (hx)
-//                    + (ht * PHI(hx*(I-2)) / C) + gridValues[k - 1][I - 2];
-//        }
-//        gridValues[K - 1][I - 1] = (-2 * ALPHA * ht / (C * R)) * gridValues[K - 1][I - 2] - (K * ht / C) * ( - 2 *  + gridValues[K - 1][I - 2]) / (hx)
-//                + (ht * PHI(hx*(I-2)) / C) + gridValues[K - 1][I - 2];
-//        for (int k = 1; k < K; k++) {
-////            gridValues[k][I - 1] = (-2 * ALPHA * ht / (C * R)) * gridValues[k - 1][I - 1] + (this.K * ht / C) * ( 2 * (gridValues[k - 1][I - 2] - gridValues[k - 1][I - 1])) / (hx*hx)
-////                    + (ht * PHI(hx * (I - 1)) / C) + gridValues[k -1][I - 1];
-//            gridValues[k][I - 1] = gridValues[k - 1][I - 1] * (1 - 2* ALPHA * ht/(C*R) - 2*this.K*ht/(C*hx*hx)) + (ht/C)*(2*gridValues[k-1][I-2]*this.K/(hx*hx) + PHI(hx * 0));
-//
-//        }
 
         return gridValues;
     }
@@ -73,20 +52,10 @@ public class ExplicitScheme {
         } else {
             return 0;
         }
-
-
-        // return (Math.sin(2 * Math.PI * xi / 3) - Math.sin(Math.PI * xi / 3)) * 4 / (2 * Math.PI * xi + Math.sin(2 * Math.PI * xi));
     }
 
     private double PSI(double x){
         return Math.cos(2 * Math.PI * x / L);
-    }
-
-
-    private double uikplus1(double uiplus1k, double uik, double uiminus1k, double hx, double ht, double phi) {
-        double result = (-2 * ALPHA * ht / (C * R)) * uik + (K * ht / C) * ((uiplus1k - 2 * uik + uiminus1k) / (hx*hx))
-                + (ht * phi / C) + uik;
-        return result;
     }
 
     public void explicitScheme(double ht, double hx, double t) {
@@ -115,7 +84,5 @@ public class ExplicitScheme {
         jFrame.setVisible(true);
         jFrame.setSize(800, 600);
         jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-
     }
 }
