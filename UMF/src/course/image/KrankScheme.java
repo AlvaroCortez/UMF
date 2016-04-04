@@ -1,9 +1,8 @@
-package course;
+package course.image;
 
-/**
- * Created by Den on 03.04.16.
- */
-public class ImplicitScheme extends Scheme{
+import course.Scheme;
+
+public class KrankScheme extends Scheme{
 
     private final double L = 1;
     private final double U0 = 0;
@@ -26,6 +25,7 @@ public class ImplicitScheme extends Scheme{
 
     private double[][] gridValues;
 
+
     @Override
     public double[][] scheme(double hx, double ht) {
         gridValues = new double[(int) (T / ht ) + 1][(int) ((L / hx) ) + 1];
@@ -37,6 +37,7 @@ public class ImplicitScheme extends Scheme{
         f = new double[I + 1];
         alpha = new double[I + 1];
         beta = new double[I + 1];
+        double G = ALPHA*ht/(C*R);
 
         double gamma = this.K*ht/(C*hx*hx);
 
@@ -47,15 +48,22 @@ public class ImplicitScheme extends Scheme{
         for (int k = 1; k <= K; k++) {
             alpha[0] = 0.1;
             beta[0] = 0.1;
-            for (int i = 1; i <= I; i++) {
-                a[i] = -gamma;
-                b[i] = 1 + 2* ALPHA*ht/(C*R) + 2*gamma;
-                c[i] = -gamma;
-                f[i] = gridValues[k - 1][i] + (ht/C)*PHI(hx * i);
+            for (int i = 1; i < I; i++) {
+                a[i] = -gamma/2;
+                b[i] = 1 - G + gamma;
+                c[i] = -gamma/2;
+                f[i] = gridValues[k-1][i-1] *a[i] + gridValues[k-1][i] * b[i] + gridValues[k-1][i+1] * c[i] + (ht/C)*PHI(hx * i);
                 alpha[i] = - a[i] / (b[i] + c[i] * alpha[i - 1]);
                 beta[i] = (f[i] - c[i] * beta[i - 1]) / (b[i] + c[i] * alpha[i - 1]);
             }
-            
+
+            a[I] = -gamma/2;
+            b[I] = 1 - G + gamma;
+            c[I] = -gamma/2;
+            f[I] = gridValues[k-1][I-1] *a[I] + gridValues[k-1][I] * b[I] + gridValues[k-1][I-1] * c[I] + (ht/C)*PHI(hx * I);
+            alpha[I] = - a[I] / (b[I] + c[I] * alpha[I - 1]);
+            beta[I] = (f[I] - c[I] * beta[I - 1]) / (b[I] + c[I] * alpha[I - 1]);
+
             gridValues[k][I] = (gridValues[k - 1][I] - a[I]* beta[I - 1] + c[I]* beta[I - 1])/(a[I]* alpha[I - 1] + b[I] + c[I]* alpha[I - 1]);
             for (int i = I; i > 0; i--) {
                 gridValues[k][i - 1] = gridValues[k][i]* alpha[i - 1] + beta[i - 1];
@@ -63,5 +71,6 @@ public class ImplicitScheme extends Scheme{
         }
 
         return gridValues;
+
     }
 }

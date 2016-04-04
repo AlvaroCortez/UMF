@@ -3,6 +3,7 @@ package course;
 import course.dialogs.AboutUsDialog;
 import course.dialogs.InstructionDialog;
 import course.dialogs.TaskDialog;
+import course.image.KrankScheme;
 import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartPanel;
 
@@ -22,6 +23,7 @@ public class JFrameOfApplication extends JFrame{
     private static final int NORMAL = 0;
     private static final int EXPLICIT = 100;
     private static final int IMPLICIT = 200;
+    private static final int KRANK = 300;
     private JButton executeButton;
     private JButton executeXButton;
     private ChartPanel chartPanel;
@@ -67,6 +69,8 @@ public class JFrameOfApplication extends JFrame{
     private JTextField schemeFieldParamHT;
     private ExplicitScheme explicitScheme;
     private ImplicitScheme implicitScheme;
+    private KrankScheme krankScheme;
+    private JButton krankSchemeButton;
 
     public void init(){
         taskDialog = new TaskDialog(this);
@@ -188,6 +192,15 @@ public class JFrameOfApplication extends JFrame{
             }
         });
 
+        krankScheme = new KrankScheme();
+        krankSchemeButton = new JButton("Схема Кранка-Николсона");
+        krankSchemeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                schemeButtonClicked(KRANK);
+            }
+        });
+
         MigLayout mwLayout = new MigLayout("", "[][]", "[top][]");
         getContentPane().setLayout(mwLayout);
         getContentPane().add(chartPanel, "grow 50,push,span");
@@ -222,6 +235,7 @@ public class JFrameOfApplication extends JFrame{
         paramsPanel.add(schemeFieldParamHT, "cell 1 0 5 1, wrap");
         paramsPanel.add(explicitSchemeButton, "wrap");
         paramsPanel.add(implicitSchemeButton, "wrap");
+        paramsPanel.add(krankSchemeButton, "wrap");
         getContentPane().add(paramsPanel, "dock west");
         System.out.println("При eps = 0.00001, x = 0.66, t = 1");
         solution.oor(0.00001, 0.66, 1);
@@ -255,6 +269,9 @@ public class JFrameOfApplication extends JFrame{
                 break;
             case IMPLICIT:
                 implicitScheme.explicitScheme(ht, hx, t);
+                break;
+            case KRANK:
+                krankScheme.explicitScheme(ht, hx, t);
         }
     }
 
