@@ -45,8 +45,8 @@ public class ImplicitScheme extends Scheme{
         }
 
         for (int k = 1; k <= K; k++) {
-            alpha[0] = 0.1;
-            beta[0] = 0.1;
+            alpha[0] = gamma/(1 + 2*ALPHA*ht/(C*R) + 2*gamma);
+            beta[0] = (gridValues[k - 1][0] + (ht/C)*PHI(0))/(1 + 2* ALPHA*ht/(C*R) + 2*gamma);
             for (int i = 1; i <= I; i++) {
                 a[i] = -gamma;
                 b[i] = 1 + 2* ALPHA*ht/(C*R) + 2*gamma;
@@ -56,7 +56,7 @@ public class ImplicitScheme extends Scheme{
                 beta[i] = (f[i] - c[i] * beta[i - 1]) / (b[i] + c[i] * alpha[i - 1]);
             }
             
-            gridValues[k][I] = (gridValues[k - 1][I] - a[I]* beta[I - 1] + c[I]* beta[I - 1])/(a[I]* alpha[I - 1] + b[I] + c[I]* alpha[I - 1]);
+            gridValues[k][I] = (gridValues[k - 1][I] - a[I]* beta[I - 1] - c[I]* beta[I - 1] + (ht/this.C)* PHI(hx * I))/(a[I]* alpha[I - 1] + b[I] + c[I]* alpha[I - 1]);
             for (int i = I; i > 0; i--) {
                 gridValues[k][i - 1] = gridValues[k][i]* alpha[i - 1] + beta[i - 1];
             }

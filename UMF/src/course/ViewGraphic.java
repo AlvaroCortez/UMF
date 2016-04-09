@@ -16,14 +16,22 @@ public class ViewGraphic {
     private static final int POINTS_T_ON_PLOT = 300;
     private static final String NAME = "Graphic of U";
     private Solution solution;
+    XYSeriesCollection xy = new XYSeriesCollection();
+    XYSeries series = new XYSeries(NAME);
+    XYSeries implicitSchemeSeries = new XYSeries("Неявная схема");
+    XYSeries explicitSchemeSeries = new XYSeries("Явная схема");
+    XYSeries krankSchemeSeries = new XYSeries("Схема Кранка-Николсона");
 
     public ViewGraphic(Solution solution) {
         this.solution = solution;
+        xy.addSeries(series);
+        xy.addSeries(implicitSchemeSeries);
+        xy.addSeries(explicitSchemeSeries);
+        xy.addSeries(krankSchemeSeries);
     }
 
     public JFreeChart getChartT(int type) {
-        XYSeriesCollection xy = new XYSeriesCollection();
-        XYSeries series = new XYSeries(NAME);
+        series.clear();
         int I = POINTS_X_ON_PLOT;
         double spatialStep = solution.getL() / I;
         switch (type) {
@@ -40,7 +48,6 @@ public class ViewGraphic {
                 }
                 break;
         }
-        xy.addSeries(series);
         JFreeChart pl = ChartFactory.createXYLineChart("", "x, кол-во слагаемых N = " + solution.getN(), "u(x), при t = " + solution.getSmallT(),
                 xy, PlotOrientation.VERTICAL, true, true, false);
         double dy = (series.getMaxY() - series.getMinY()) * 0.03;
@@ -75,5 +82,38 @@ public class ViewGraphic {
         ((XYPlot) pl.getPlot()).getRangeAxis()
                 .setRange(series.getMinY() - dy, series.getMaxY() + dy);
         return pl;
+    }
+
+
+    public XYSeriesCollection getXy() {
+        return xy;
+    }
+
+    public void setXy(XYSeriesCollection xy) {
+        this.xy = xy;
+    }
+
+    public XYSeries getImplicitSchemeSeries() {
+        return implicitSchemeSeries;
+    }
+
+    public void setImplicitSchemeSeries(XYSeries implicitSchemeSeries) {
+        this.implicitSchemeSeries = implicitSchemeSeries;
+    }
+
+    public XYSeries getKrankSchemeSeries() {
+        return krankSchemeSeries;
+    }
+
+    public void setKrankSchemeSeries(XYSeries krankSchemeSeries) {
+        this.krankSchemeSeries = krankSchemeSeries;
+    }
+
+    public XYSeries getExplicitSchemeSeries() {
+        return explicitSchemeSeries;
+    }
+
+    public void setExplicitSchemeSeries(XYSeries explicitSchemeSeries) {
+        this.explicitSchemeSeries = explicitSchemeSeries;
     }
 }

@@ -3,9 +3,12 @@ package course;
 import course.dialogs.AboutUsDialog;
 import course.dialogs.InstructionDialog;
 import course.dialogs.TaskDialog;
-import course.image.KrankScheme;
 import net.miginfocom.swing.MigLayout;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
 
 import javax.swing.*;
 import java.awt.*;
@@ -251,7 +254,7 @@ public class JFrameOfApplication extends JFrame{
         try {
             t = Double.parseDouble(schemeFieldParamT.getText());
         } catch (NumberFormatException e) {
-            t = 5;
+            t = 10;
         }
         try {
             hx = Double.parseDouble(schemeFieldParamHX.getText());
@@ -263,16 +266,28 @@ public class JFrameOfApplication extends JFrame{
         } catch (NumberFormatException e) {
             ht = 0.0005;
         }
+        XYSeries series = null;
         switch (type){
             case EXPLICIT:
-                explicitScheme.explicitScheme(ht, hx, t);
+                series = viewGraphic.getExplicitSchemeSeries();
+                series = explicitScheme.explicitScheme(ht, hx, t, series);
                 break;
             case IMPLICIT:
-                implicitScheme.explicitScheme(ht, hx, t);
+                series = viewGraphic.getImplicitSchemeSeries();
+                series = implicitScheme.explicitScheme(ht, hx, t, series);
                 break;
             case KRANK:
-                krankScheme.explicitScheme(ht, hx, t);
+                series = viewGraphic.getKrankSchemeSeries();
+                series = krankScheme.explicitScheme(ht, hx, t, series);
+                break;
         }
+        //viewGraphic.getXy().addSeries(series);
+        JFreeChart pl = ChartFactory.createXYLineChart("", "x, кол-во слагаемых N = " + solution.getN(), "u(x), при t = " + solution.getSmallT(),
+                viewGraphic.getXy(), PlotOrientation.VERTICAL, true, true, false);
+        //double dy = (series.getMaxY() - series.getMinY()) * 0.03;
+        //((XYPlot) pl.getPlot()).getRangeAxis()
+        //        .setRange(series.getMinY() - dy, series.getMaxY() + dy);
+        chartPanel.setChart(pl);
     }
 
     private void executeButtonClicked(int type){
@@ -300,6 +315,7 @@ public class JFrameOfApplication extends JFrame{
                 break;
             case ACCURACY:
                 chartPanel.setChart(viewGraphic.getChartT(ACCURACY));
+
                 countIterationLabel.setText("Количество слагаемых: "+String.valueOf(solution.getN()));
                 break;
         }

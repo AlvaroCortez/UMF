@@ -1,13 +1,6 @@
 package course;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-
-import javax.swing.*;
 
 /**
  * Created by Den on 03.04.16.
@@ -29,9 +22,9 @@ public abstract class Scheme {
 
     public abstract double[][] scheme(double hx, double ht);
 
-    public void explicitScheme(double ht, double hx, double t) {
-        XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-        XYSeries xySeries = new XYSeries("Схема");
+    public XYSeries explicitScheme(double ht, double hx, double t, XYSeries xySeries) {
+        //XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
+        //XYSeries xySeries = new XYSeries(schemeName);
         //ExplicitScheme explicitScheme = new ExplicitScheme();
         //double ht = 0.0005;
         //double hx = 0.01;
@@ -45,16 +38,17 @@ public abstract class Scheme {
             xySeries.add(x, scheme[level][i]);
             x += hx;
         }
-        xySeriesCollection.addSeries(xySeries);
-        JFreeChart pl = ChartFactory.createXYLineChart("", "x, при t = " + t + ", ht = " + ht + ", hx = " + hx, "u(x)",
-                xySeriesCollection, PlotOrientation.VERTICAL, true, true, false);
-        JFrame jFrame = new JFrame();
-        ChartPanel chartPanel = new ChartPanel(pl);
-        jFrame.add(chartPanel);
-        chartPanel.setVisible(true);
-        jFrame.setVisible(true);
-        jFrame.setSize(800, 600);
-        jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        xySeriesCollection.addSeries(xySeries);
+//        JFreeChart pl = ChartFactory.createXYLineChart("", "x, при t = " + t + ", ht = " + ht + ", hx = " + hx, "u(x)",
+//                xySeriesCollection, PlotOrientation.VERTICAL, true, true, false);
+//        JFrame jFrame = new JFrame();
+//        ChartPanel chartPanel = new ChartPanel(pl);
+//        jFrame.add(chartPanel);
+//        chartPanel.setVisible(true);
+//        jFrame.setVisible(true);
+//        jFrame.setSize(800, 600);
+//        jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        return xySeries;
     }
 
     protected double PHI(double xi) {
