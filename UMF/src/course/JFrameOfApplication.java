@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 public class JFrameOfApplication extends JFrame{
 
     private static final int WIDTH = 1000;
-    private static final int HEIGHT = 700;
+    private static final int HEIGHT = 800;
     private static final int ACCURACY = 1;
     private static final int NORMAL = 0;
     private static final int EXPLICIT = 100;

@@ -38,18 +38,22 @@ public class ImplicitScheme extends Scheme{
         alpha = new double[I + 1];
         beta = new double[I + 1];
 
-        double gamma = this.K*ht/(C*hx*hx);
+        double gamma = this.K*ht/(this.C*hx*hx);
 
         for (int i = 0; i <= I  /*i < I*/; i++) {
             gridValues[0][i] = PSI(hx * i) - U0;
         }
 
         for (int k = 1; k <= K; k++) {
-            alpha[0] = gamma/(1 + 2*ALPHA*ht/(C*R) + 2*gamma);
-            beta[0] = (gridValues[k - 1][0] + (ht/C)*PHI(0))/(1 + 2* ALPHA*ht/(C*R) + 2*gamma);
+            a[0] = -gamma;
+            b[0] = 1 + 2 * ALPHA*ht/(C*R) + 2*gamma;
+            c[0] = -gamma;
+            f[0] = gridValues[k-1][0] + (ht/this.C)*PHI(0);
+            alpha[0] = -2*a[0]/b[0];//gamma/(1 + 2*ALPHA*ht/(C*R) + 2*gamma);
+            beta[0] = f[0]/b[0];//(gridValues[k - 1][0] + (ht/C)*PHI(0))/(1 + 2* ALPHA*ht/(C*R) + 2*gamma);
             for (int i = 1; i <= I; i++) {
-                a[i] = -gamma;
-                b[i] = 1 + 2* ALPHA*ht/(C*R) + 2*gamma;
+                a[i] = a[0];
+                b[i] = b[0];
                 c[i] = -gamma;
                 f[i] = gridValues[k - 1][i] + (ht/C)*PHI(hx * i);
                 alpha[i] = - a[i] / (b[i] + c[i] * alpha[i - 1]);
@@ -57,9 +61,14 @@ public class ImplicitScheme extends Scheme{
             }
             
             gridValues[k][I] = (gridValues[k - 1][I] - a[I]* beta[I - 1] - c[I]* beta[I - 1] + (ht/this.C)* PHI(hx * I))/(a[I]* alpha[I - 1] + b[I] + c[I]* alpha[I - 1]);
+            //gridValues[k][I] = (gridValues[k-1][I] + a[I]*beta[I]/alpha[I] - c[I]*beta[I-1])/(a[I]/alpha[I] + b[I] +c[I]*alpha[I-1]);
             for (int i = I; i > 0; i--) {
                 gridValues[k][i - 1] = gridValues[k][i]* alpha[i - 1] + beta[i - 1];
             }
+            //gridValues[k][0] = (gridValues[k-1][0] + (ht*this.C)*PHI(0) - a[0]*beta[0]/alpha[0] - c[0]*beta[0]/alpha[0])/(a[0]/alpha[0] + b[0] + c[0]/alpha[0]);
+            //gridValues[k][1] = (gridValues[k-1][0] - b[0]*beta[0] + (ht/C)*PHI(0))/(a[0] + b[0]*alpha[0] + c[0]);
+            //gridValues[k-1][0] = gridValues[k][0]*(a[0]/alpha[0] + b[0] + c[0]*alpha[0]) + (beta[0]/alpha[0])*(a[0] + c[0]) - (ht/C)*PHI(0);
+            //gridValues[k][0] = (gridValues[k-1][0] + gridValues[k][1]*gamma*2 + (ht/C)*PHI(0))/(b[0]);
         }
 
         return gridValues;

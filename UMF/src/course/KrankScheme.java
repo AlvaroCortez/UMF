@@ -44,17 +44,18 @@ public class KrankScheme extends Scheme {
 
         b[0] = 1 + G + gamma;
         c[0] = -gamma / 2;
-        // TODO: 09.04.2016 Попробовать потом удалить первое слагаемое.
-        f[0] = /*gridValues[0][0] * (1 - G - gamma) +*/ gridValues[0][1] * gamma + ht / C * PHI(0);
+        f[0] = gridValues[0][0] * (1 - G - gamma) + gridValues[0][1] * gamma + ht / C * PHI(0);
         alpha[0] = -c[0] / b[0];
         beta[0] = f[0] / b[0];
 
         for (int k = 1; k <= K; k++) {
+            f[0] = gridValues[k-1][0] * (1 - G - gamma) + gridValues[k-1][1] * gamma + ht / C * PHI(0);
+            alpha[0] = -2*c[0] / b[0];
+            beta[0] = f[0] / b[0];
             for (int i = 1; i < I; i++) {
                 a[i] = -gamma / 2;
                 b[i] = 1 + G + gamma;
                 c[i] = -gamma / 2;
-                // TODO: 09.04.2016 Поменять обозначение, чтобы потом не путаться. Это f[k][i]. Если будет ошибка, то можно попробовать поменять индексы.
                 f[i] = gridValues[k - 1][i - 1] * (-a[i]) + gridValues[k - 1][i] * (1 - G - gamma) + gridValues[k - 1][i + 1] * (-c[i]) + (ht / C) * PHI(hx * i);
 
                 alpha[i] = -c[i] / (b[i] + a[i] * alpha[i - 1]);
@@ -63,16 +64,25 @@ public class KrankScheme extends Scheme {
 
             a[I] = -gamma / 2;
             b[I] = 1 + G + gamma;
+            c[I] = -gamma/2;
 
-            f[I] = /*gridValues[k - 1][I] * (1 - G - gamma) + */2 * gridValues[k - 1][I - 1] * (-c[I]) + (ht / C) * PHI(hx * I);
+            f[I] = gridValues[k - 1][I] * (1 - G - gamma) + 2 * gridValues[k - 1][I - 1] * (-c[I]) + (ht / C) * PHI(hx * I);
             beta[I] = (f[I] - a[I] * beta[I - 1]) / (b[I] + a[I] * alpha[I - 1]);
 
-            gridValues[k][I] = beta[I];
+//            gridValues[k][I] = beta[I];
+
+            //gridValues[k][I] = ( a[I]*alpha[I-1]*gridValues[k][] + a[I]*beta[I-1] + b[I]*gridValues[][] + c[I]*alpha[I-1]*gridValues[][] +c[I]*beta[I-1]-gridValues[][I-1]*gamma-ht/C*PHI(hx*I)) / (1 - G - gamma);
+
+            gridValues[k][I] = (gridValues[k - 1][I]*(1-G-gamma) - a[I]* beta[I - 1] - c[I]* beta[I - 1] + (ht/this.C)* PHI(hx * I) +gridValues[k-1][I-1]*gamma)/(a[I]* alpha[I - 1] + b[I] + c[I]* alpha[I - 1]);
+
 
             for (int i = I; i > 0; i--) {
                 gridValues[k][i - 1] = gridValues[k][i] * alpha[i - 1] + beta[i - 1];
             }
 
+            //gridValues[k][0] = (gridValues[k-1][0]*(1+G+gamma)+gridValues[k-1][1]*(-gamma)-gridValues[k][1]*gamma-ht/C*PHI(0)) / (1 - G - gamma);
+
+//            gridValues[k][0] = (gridValues[k-1][0]*(1+G+gamma)+gridValues[k-1][1]*(-gamma)-gridValues[k][1]*gamma + ht/C*PHI(0)) / (1 + G + gamma);
         }
         return gridValues;
     }
