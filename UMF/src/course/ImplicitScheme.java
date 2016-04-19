@@ -73,4 +73,9 @@ public class ImplicitScheme extends Scheme{
 
         return gridValues;
     }
+
+    @Override
+    public String toString() {
+        return "Неявная схема";
+    }
 }

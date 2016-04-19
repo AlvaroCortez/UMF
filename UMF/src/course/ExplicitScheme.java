@@ -37,4 +37,9 @@ public class ExplicitScheme extends Scheme{
 
         return gridValues;
     }
+
+    @Override
+    public String toString() {
+        return "Явная схема";
+    }
 }

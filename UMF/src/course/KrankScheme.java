@@ -86,4 +86,9 @@ public class KrankScheme extends Scheme {
         }
         return gridValues;
     }
+
+    @Override
+    public String toString() {
+        return "Схема Кранка-Николсона";
+    }
 }
