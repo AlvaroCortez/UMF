@@ -4,6 +4,15 @@ public class Table {
 
     public static void main(String[] args) {
         Table table = new Table();
+        System.out.println("Смотрим порядок по x");
+        table.viewTable(10, 5, new KrankScheme(), 1, 2);
+        table.viewTable(10, 5, new ExplicitScheme(), 1, 2);
+        table.viewTable(10, 5, new ImplicitScheme(), 1, 2);
+        System.out.println("Смотрим порядок по t");
+        table.viewTable(10, 5, new KrankScheme(), 4, 1);
+        table.viewTable(10, 5, new ExplicitScheme(), 4, 1);
+        table.viewTable(10, 5, new ImplicitScheme(), 4, 1);
+        System.out.println("_______________________________________");
         table.viewTable(10, 5, new KrankScheme(), 4, 2);
         table.viewTable(10, 5, new ExplicitScheme(), 4, 2);
         table.viewTable(10, 5, new ImplicitScheme(), 4, 2);
@@ -20,49 +29,29 @@ public class Table {
         double[] eps = new double[rowsNumber + 1]; // на единицу больше строк, потому что нужно посчитать значения дельты и эпсилона с меньшим шагом для последней строки
         double[] epsMini = new double[rowsNumber + 1];
         double[] delta = new double[rowsNumber + 1];
-        int[] KArr = new int[rowsNumber + 2];
-        int[] IArr = new int[rowsNumber + 2];
+        int[] KArr = new int[rowsNumber + 1];
+        int[] IArr = new int[rowsNumber + 1];
         KArr[0] = K;
         IArr[0] = I;
-        eps[0] = Double.MAX_VALUE;
 
 
-        // TODO: 19.04.2016 Случай для первой строки
-        for (int i = 0; i <= K; i++) {
-            for (int j = 0; j <= I; j++) {
-                solutionValues[i][j] = solution.getSumWithLimit(j * hx, i * ht, solution.getN());
-            }
-        }
-        for (int i = 0; i <= K; i++) {
-            for (int j = 0; j <= I; j++) {
-                solutionValues[i][j] -= gridValues[i][j];
-                eps[0] = Math.abs(solutionValues[i][j]) < eps[0] ? Math.abs(solutionValues[i][j]) : eps[0];
-            }
-        }
+        double t = 10; // время, по которому будем усекать.
 
-
-        K *= KMultiplicator;
-        I *= IMultiplicator;
-        KArr[1] = K;
-        IArr[1] = I;
-        hx = solution.getL() / I;
-        ht = solution.getT() / K;
-        gridValues = scheme.scheme(hx, ht);
-        solutionValues = new double[K + 1][I + 1];
-
-
-        // TODO: 19.04.2016 Случай для остальных, кроме последней
-        for (int k = 1; k < rowsNumber; k++) {
-            eps[k] = Double.MAX_VALUE;
+        // TODO: 19.04.2016 Случай для всех строк, кроме последней
+        for (int k = 0; k < rowsNumber; k++) {
+            eps[k] = 0;
             for (int i = 0; i <= K; i++) {
                 for (int j = 0; j <= I; j++) {
                     solutionValues[i][j] = solution.getSumWithLimit(j * hx, i * ht, solution.getN());
                 }
             }
-            for (int i = 0; i <= K; i++) {
+
+            int cut = (int) (t / ht) + 1; // шаг по времени, с которого проводим усечение
+
+            for (int i = /*0*/ cut; i <= K; i++) {
                 for (int j = 0; j <= I; j++) {
                     solutionValues[i][j] -= gridValues[i][j];
-                    eps[k] = Math.abs(solutionValues[i][j]) < eps[k] ? Math.abs(solutionValues[i][j]) : eps[k];
+                    eps[k] = Math.abs(solutionValues[i][j]) > eps[k] ? Math.abs(solutionValues[i][j]) : eps[k];
                 }
             }
 
@@ -77,22 +66,26 @@ public class Table {
         }
 
         // TODO: 19.04.2016 Случай для последней строки
-        eps[rowsNumber] = Double.MAX_VALUE;
+        eps[rowsNumber] = 0;
         for (int i = 0; i <= K; i++) {
             for (int j = 0; j <= I; j++) {
                 solutionValues[i][j] = solution.getSumWithLimit(j * hx, i * ht, solution.getN());
             }
         }
-        for (int i = 0; i <= K; i++) {
+
+        int cut = (int) (t / ht);
+
+
+        for (int i = /*0*/ cut; i <= K; i++) {
             for (int j = 0; j <= I; j++) {
                 solutionValues[i][j] -= gridValues[i][j];
-                eps[rowsNumber] = Math.abs(solutionValues[i][j]) < eps[rowsNumber] ? Math.abs(solutionValues[i][j]) : eps[rowsNumber];
+                eps[rowsNumber] = Math.abs(solutionValues[i][j]) > eps[rowsNumber] ? Math.abs(solutionValues[i][j]) : eps[rowsNumber];
             }
         }
 
 
         // TODO: 19.04.2016 Заполняем епсилон с уменьшенным шагом и считаем дельту
-        for (int i = 0; i < rowsNumber; i++) {
+        for (int i = 1; i < rowsNumber; i++) {
             epsMini[i] = eps[i + 1];
             delta[i] = eps[i] / epsMini[i];
             // delta[i] = epsMini[i] / eps[i];
