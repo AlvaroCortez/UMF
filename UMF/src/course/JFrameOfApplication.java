@@ -65,15 +65,19 @@ public class JFrameOfApplication extends JFrame{
     private JButton implicitSchemeButton;
     private JLabel schemeLabel;
     private JLabel schemeLabelParamT;
-    private JLabel schemeLabelParamHX;
-    private JLabel schemeLabelParamHT;
+    private JLabel schemeLabelParamI;
+    private JLabel schemeLabelParamK;
+    private JLabel schemeLabelParamX;
     private JTextField schemeFieldParamT;
-    private JTextField schemeFieldParamHX;
-    private JTextField schemeFieldParamHT;
+    private JTextField schemeFieldParamK;
+    private JTextField schemeFieldParamI;
+    private JTextField schemeFieldParamX;
     private ExplicitScheme explicitScheme;
     private ImplicitScheme implicitScheme;
     private KrankScheme krankScheme;
     private JButton krankSchemeButton;
+    private JButton schemeGraphicT;
+    private JButton schemeGraphicX;
 
     public void init(){
         taskDialog = new TaskDialog(this);
@@ -170,6 +174,9 @@ public class JFrameOfApplication extends JFrame{
         countIterationLabel = new JLabel();
         countIterationLabelX = new JLabel();
 
+        schemeGraphicT = new JButton("График по T");
+        schemeGraphicX = new JButton("График по X");
+
         explicitScheme = new ExplicitScheme();
         explicitSchemeButton = new JButton("Явная схема");
         explicitSchemeButton.addActionListener(new ActionListener() {
@@ -180,11 +187,14 @@ public class JFrameOfApplication extends JFrame{
         });
         schemeLabel = new JLabel("Построение схем");
         schemeLabelParamT = new JLabel("Введите параметр t");
-        schemeLabelParamHT = new JLabel("Введите параметр hx");
-        schemeLabelParamHX = new JLabel("Введите параметр ht");
-        schemeFieldParamHT = new JTextField();
+        schemeLabelParamK = new JLabel("Кол-во инт-ов по K");
+        schemeLabelParamI = new JLabel("Кол-во инт-ов по I");
+        schemeFieldParamI = new JTextField();
+        schemeFieldParamI.setPreferredSize(new Dimension(100, 2));
         schemeFieldParamT = new JTextField();
-        schemeFieldParamHX = new JTextField();
+        schemeFieldParamT.setPreferredSize(new Dimension(100, 2));
+        schemeFieldParamK = new JTextField();
+        schemeFieldParamK.setPreferredSize(new Dimension(100, 2));
 
         implicitScheme = new ImplicitScheme();
         implicitSchemeButton = new JButton("Неявная схема");
@@ -228,14 +238,14 @@ public class JFrameOfApplication extends JFrame{
         paramsPanel.add(epsXLabel,"split");
         paramsPanel.add(epsXField, "cell 1 0 5 1, wrap");
         paramsPanel.add(epsXButton,"wrap");
-        paramsPanel.add(countIterationLabelX, "wrap");
+        paramsPanel.add(countIterationLabelX, "span 5, wrap");
         paramsPanel.add(schemeLabel, "wrap");
-        paramsPanel.add(schemeLabelParamT, "split 2");
+        paramsPanel.add(schemeLabelParamT, "split");
         paramsPanel.add(schemeFieldParamT, "cell 1 0 5 1, wrap");
-        paramsPanel.add(schemeLabelParamHX, "split 2");
-        paramsPanel.add(schemeFieldParamHX, "cell 1 0 5 1, wrap");
-        paramsPanel.add(schemeLabelParamHT, "split 2");
-        paramsPanel.add(schemeFieldParamHT, "cell 1 0 5 1, wrap");
+        paramsPanel.add(schemeLabelParamI, "split 2");
+        paramsPanel.add(schemeFieldParamI, "cell 1 0 5 1, wrap");
+        paramsPanel.add(schemeLabelParamK, "split 2");
+        paramsPanel.add(schemeFieldParamK, "cell 1 0 5 1, wrap");
         paramsPanel.add(explicitSchemeButton, "wrap");
         paramsPanel.add(implicitSchemeButton, "wrap");
         paramsPanel.add(krankSchemeButton, "wrap");
@@ -257,32 +267,36 @@ public class JFrameOfApplication extends JFrame{
             t = 10;
         }
         try {
-            hx = Double.parseDouble(schemeFieldParamHX.getText());
+            hx = solution.getL()/Double.parseDouble(schemeFieldParamI.getText());
         } catch (NumberFormatException e) {
             hx = 0.01;
         }
         try {
-            ht = Double.parseDouble(schemeFieldParamHT.getText());
+            ht = solution.getT()/Double.parseDouble(schemeFieldParamK.getText());
         } catch (NumberFormatException e) {
             ht = 0.0005;
         }
         XYSeries series = null;
+        //viewGraphic.clear();
         switch (type){
             case EXPLICIT:
                 series = viewGraphic.getExplicitSchemeSeries();
+                series.clear();
                 series = explicitScheme.explicitScheme(ht, hx, t, series);
                 break;
             case IMPLICIT:
                 series = viewGraphic.getImplicitSchemeSeries();
+                series.clear();
                 series = implicitScheme.explicitScheme(ht, hx, t, series);
                 break;
             case KRANK:
                 series = viewGraphic.getKrankSchemeSeries();
+                series.clear();
                 series = krankScheme.explicitScheme(ht, hx, t, series);
                 break;
         }
         //viewGraphic.getXy().addSeries(series);
-        JFreeChart pl = ChartFactory.createXYLineChart("", "x, кол-во слагаемых N = " + solution.getN(), "u(x), при t = " + solution.getSmallT(),
+        JFreeChart pl = ChartFactory.createXYLineChart("", "x, кол-во слагаемых N = " + solution.getN() + ", hx = " + hx + ", ht = " + ht, "u(x), при t = " + solution.getSmallT(),
                 viewGraphic.getXy(), PlotOrientation.VERTICAL, true, true, false);
         //double dy = (series.getMaxY() - series.getMinY()) * 0.03;
         //((XYPlot) pl.getPlot()).getRangeAxis()

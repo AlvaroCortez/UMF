@@ -116,4 +116,13 @@ public class ViewGraphic {
     public void setExplicitSchemeSeries(XYSeries explicitSchemeSeries) {
         this.explicitSchemeSeries = explicitSchemeSeries;
     }
+    public void clear(){
+        //implicitSchemeSeries = new XYSeries("Неявная схема");
+        implicitSchemeSeries.clear();
+        //explicitSchemeSeries = new XYSeries("Явная схема");
+        explicitSchemeSeries.clear();
+        //krankSchemeSeries = new XYSeries("Схема Кранка-Николсона");
+        krankSchemeSeries.clear();
+
+    }
 }
