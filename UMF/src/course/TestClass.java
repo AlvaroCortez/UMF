@@ -8,6 +8,7 @@ public class TestClass {
         System.out.println("test");
         //change master
         //change test_branch_3
+        //change master 2
     }
     //change test_branch_1
     //change test_branch_2
